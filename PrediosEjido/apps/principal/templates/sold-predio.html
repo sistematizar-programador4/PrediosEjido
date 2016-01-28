@@ -1,0 +1,112 @@
+<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
+		</div>
+		<form action="{% url 'sold_predio' predio_pk %}" method="POST">
+			{% csrf_token %}
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{{ forms.c_recaja.label }}</label>
+							{{ forms.c_recaja }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{{ forms.f_recaja.label }}</label>
+							{{ forms.f_recaja }}
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>{{ forms.v_recaja.label }}</label>
+							{{ forms.v_recaja }}
+						</div>
+					</div>
+					<div class="col-md-6" id="propieta_fin">
+						<div class="form-group">
+							<label>{{ forms.id_propieta_fin.label }}</label>
+							{{ forms.id_propieta_fin }}
+						</div>
+					</div>
+					<div class="new-propieta">
+						<div class="col-md-12">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>{{ forms.id_propieta.label }}</label>
+									{{ forms.id_propieta }}
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>{{ forms.name.label }}</label>
+									{{ forms.name }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-center">
+					<a href="#" class="btn btn-success add-propieta">Agregar propietario</a>
+					<a href="#" class="btn btn-danger close-add-propieta">Cerrar</a>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<input type="submit" value="Guardar" class="btn btn-success"/>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	$('.add-propieta').on('click', function(e){
+		e.preventDefault();
+		$('#id_id_propieta_fin').attr('required', false).hide().val('');
+		$('#propieta_fin').hide();
+		$('#id_id_propieta').attr('required', true);
+		$('#id_name').attr('required', true);
+		$('.new-propieta').show();
+		$('.close-add-propieta').show();
+		$('.add-propieta').hide();
+	});
+	$('.close-add-propieta').on('click', function(e){
+		e.preventDefault();
+		$('#id_id_propieta_fin').attr('required', true).show();
+		$('#propieta_fin').show();
+		$('#id_id_propieta').attr('required', false);
+		$('#id_name').attr('required', false);
+		$('.new-propieta').hide();
+		$('.close-add-propieta').hide();
+		$('.add-propieta').show();
+	});
+	$(function() {
+		$('.new-propieta').hide();
+		$('.close-add-propieta').hide();
+		$(".datepicker").datepicker({dateFormat: 'yy-mm-dd'});
+	});
+	$(function() {
+		$('.form-group').on('keydown', '.number-val', function(e){-1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()});
+	});
+	$("form").submit(function(event){
+		event.preventDefault();
+		var formData = new FormData(this);
+		$.ajax({
+			url: $(this).attr('action'),
+			type: $(this).attr('method'),
+			dataType: "json",
+			data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+			success: function(data){
+				$('.'+data.response).addClass("success");
+				$('.sold-'+data.response).remove();
+				$('#Modal').modal('hide');
+			}
+		});
+	});
+</script>

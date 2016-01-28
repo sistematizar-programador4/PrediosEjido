@@ -1,0 +1,124 @@
+{% extends 'layout/base.html' %}
+
+{% load humanize %}
+
+{% load static %}
+
+{% block content_head %}
+	<link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+	<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+	<script src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}">
+	<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+{% endblock content_head %}
+
+{% block content %}
+	{% include 'elements/menu.html' %}
+	<div id="page-wrapper">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">{{ title }}
+					<a href="{% url 'add_propieta' predio.c_catastral %}" class="btn btn-success open-modal" data-toggle="modal" data-target="#Modal">Agregar Propietario</a>
+					<a href="{% url 'add_pago' predio.c_catastral %}" class="btn btn-success open-modal" data-toggle="modal" data-target="#Modal">Nuevo Pago</a>
+				</h1>
+			</div>
+		</div>
+			<h3>Propietarios</h3>
+			<table class="table table-striped table-bordered table-hover table-propieta" id="table">
+				<thead>
+					<tr>
+						<th>Identificación</th>
+						<th>Nombre</th>
+						<th>Dirección</th>
+						<th>Teléfono</th>
+						<th>Email</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for prop in predio.propieta_predio.all %}
+						<tr class="pro-{{ prop.pk }}">
+							<td>{{ prop.id_propieta }}</td>
+							<td>{{ prop.name }}</td>
+							<td>{{ prop.direction }}</td>
+							<td>{{ prop.tel }}</td>
+							<td>{{ prop.email }}</td>
+							<td>
+								{% if user.is_superuser %}
+									<a href="{% url 'delete_propieta_relation' predio.c_catastral prop.pk %}" class="btn btn-danger delete">Eliminar</a>
+								{% endif %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<h3>Pagos realizados</h3>
+			<table class="table table-striped table-bordered table-hover table-pago" id="table">
+				<thead>
+					<tr>
+						<th>Código recibo de caja</th>
+						<th>Fecha</th>
+						<th>Valor</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for pagos in pago %}
+						<tr class="{{ pagos.pk }}">
+							<td>{{ pagos.c_recaja }}</td>
+							<td>{{ pagos.f_recaja }}</td>
+							<td>$ {{ pagos.v_recaja|floatformat|intcomma }}</td>
+							<td>
+								{% if user.is_superuser %}
+									<a href="{% url 'delete_pago' pagos.pk %}" class="btn btn-danger delete">Eliminar</a>
+								{% endif %}
+								<a href="{% url 'add_pago' predio.c_catastral pagos.pk %}" class="btn btn-default open-modal">Editar</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"></div>
+	<div class="modal fade" id="Modal-second" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"></div>
+{% endblock content %}
+
+{% block content_js %}
+	$(document).ready(function() {
+		$('table#table').DataTable({
+			responsive: true
+		});
+	});
+	$(document).on("click", ".open-modal", function(e){
+		e.preventDefault();
+		$('#Modal').load($(this).attr('href'),function(){
+			$('#Modal').modal({
+				show:true
+			});
+		});
+	});
+	$(document).on("click", ".open-modal-second", function(e){
+		e.preventDefault();
+		$('#Modal-second').load($(this).attr('href'),function(){
+			$('#Modal-second').modal({
+				show:true
+			});
+		});
+	});
+	$ (document).on("click", ".delete", function(e){
+		e.preventDefault();
+		if(confirm("¿Desea Eliminar el Registro?")){
+			$.ajax({
+				url: $(this).attr('href'),
+				dataType: "json",
+				success: function(data){
+					alert("Registro Eliminado");
+					$('.'+data.type+data.response).remove();
+				}
+			});
+		}else{
+			alert("Acción Cancelada");
+		}
+	});
+{% endblock content_js %}

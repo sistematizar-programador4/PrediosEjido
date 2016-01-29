@@ -126,21 +126,36 @@ def delete_predio(request, predio_pk):
 	predio.delete()
 	return HttpResponse(json.dumps(response), content_type = 'application/json')
 
-class PredioAllPDFView(PDFTemplateView):
+class PredioGeneralPDFView(PDFTemplateView):
 	template_name = "pdf_all_predio.html"
 
 	def get_context_data(self, **kwargs):
-		context = super(PredioAllPDFView, self).get_context_data(**kwargs)
-		context['option'] = self.kwargs['option']
-		if context['option'] == "1":
-			#predios = Predio.objects.exclude(c_recaja__isnull = True)
-			predios = Predio.objects.all()
-		else:
-			predios = Predio.objects.all()
+		context = super(PredioGeneralPDFView, self).get_context_data(**kwargs)
+		predios = Predio.objects.all()
+		predios_val_sum = predios.aggregate(val_sum = Sum('avaluo_catastral'))
+		context['predios_val_sum'] = predios_val_sum
 		context['predios'] = predios
-		context['cont'] = 0
-		context['total'] = predios.aggregate(avaluo_catastral_sum = Sum('avaluo_catastral'))
-		context['title'] = 'Listado de Predios y Propietarios'
+		context['title'] = 'LISTADO GENERAL DE PREDIOS Y PROPIERARIOS'
+		return context
+
+class PredioPropietaPDFView(PDFTemplateView):
+	template_name = "pdf_propieta_predio.html"
+
+	def get_context_data(self, **kwargs):
+		context = super(PredioPropietaPDFView, self).get_context_data(**kwargs)
+		predios = Predio.objects.filter(propieta_predio__isnull = False).distinct()
+		context['predios'] = predios
+		context['title'] = 'LISTADO DE PREDIOS POR PROPIERARIOS'
+		return context
+
+class PredioVentaPDFView(PDFTemplateView):
+	template_name = "pdf_venta_predio.html"
+
+	def get_context_data(self, **kwargs):
+		context = super(PredioVentaPDFView, self).get_context_data(**kwargs)
+		predios = Predio.objects.all()
+		context['predios'] = predios
+		context['title'] = 'LISTADO DE VENTAS POR PREDIOS'
 		return context
 
 def upload_data_predio(request):

@@ -6,11 +6,17 @@
 		<style type="text/css">
 			@page {
 				size: Letter landscape;
-				margin: 1.5cm;
+				margin: 4.1cm 1cm 1.5cm;
 				@frame footer {
 					-pdf-frame-content: footerContent;
 					bottom: 0cm;
 					height: 1cm;
+				}
+				@frame header {
+					top: 0.8cm;
+					margin-right: 1cm;
+					margin-left: 1cm;
+					-pdf-frame-content: table;
 				}
 			}
 			body {
@@ -28,56 +34,57 @@
 	</head>
 	<body>
 		<div>
-			-----------------------------------------------------------------------------------------------------------------------------------------------
-			<table>
+			<table id="table">
 				<tbody>
 					<tr>
-						<td colspan="6">INSTITUTO GEOGRAFICO  "AGUSTIN CODAZZI"</td>
+						<td colspan="12">---------------------------------------------------------------------------------------------------------------------------------------------------</td>
+					</tr>
+					<tr>
+						<td colspan="12">INSTITUTO GEOGRÁFICO  "AGUSTIN CODAZZI"</td>
 					</tr>
 					<tr>
 						<td>* * *</td>
-						<td style="width: 300px" colspan="2">LISTADO DE PREDIOS Y PROPIERARIOS</td>
-						<td>ALFABETICO</td>
-						<td>FECHA DE PRODUCCION</td>
+						<td colspan="6">{{ title }}</td>
+						<td colspan="4">FECHA DE PRODUCCIÓN</td>
 						<td>{% now "d-M-Y" %}</td>
 					</tr>
 					<tr>
-						<td colspan="3">CATASTRO DE: 73 TOLIMA</td>
-						<td colspan="3">MUNICIPIO DE: 148 CARMEN DE APICALA</td>
+						<td colspan="6">CATASTRO DE: 73 TOLIMA</td>
+						<td colspan="6">MUNICIPIO DE: 148 CÁRMEN DE APICALÁ</td>
 					</tr>
-				</tbody>
-			</table>
-			-----------------------------------------------------------------------------------------------------------------------------------------------
-			<table>
-				<thead>
 					<tr>
-						<th>Código catastro</th>
-						<th style="width: 40px;">ORD</th>
-						<th style="width: 40px;">TOT</th>
+						<td colspan="12">---------------------------------------------------------------------------------------------------------------------------------------------------</td>
+					</tr>
+					<tr>
+						<th style="width: 170px">Código catastro</th>
+						<th style="width: 50px">ORD</th>
+						<th style="width: 50px">TOT</th>
 						<th>Propietario</th>
-						<th style="width: 40px;">E</th>
-						<th style="width: 40px;">D</th>
+						<th style="width: 30px">E</th>
+						<th style="width: 30px">D</th>
 						<th>Número documento</th>
 						<th>Dirección del predio</th>
-						<th style="width: 90px;">Hectárea</th>
-						<th style="width: 90px;">Metro<sup>2</sup></th>
+						<th style="width: 70px">Ha</th>
+						<th style="width: 70px">M<sup>2</sup></th>
 						<th>Área construida</th>
 						<th>Avalúo catastral</th>
 					</tr>
-				</thead>
+				</tbody>
+			</table>
+			<table>
 				<tbody>
 					{% for predio in predios %}
 						<tr>
-							<td>{{ predio.c_catastral }}</td>
-							<td>{{ predio.t_ord }}</td>
-							<td>{{ predio.t_tot }}</td>
+							<td style="width: 170px">{{ predio.c_catastral }}</td>
+							<td style="width: 50px">{{ predio.t_ord }}</td>
+							<td style="width: 50px">{{ predio.t_tot }}</td>
 							<td>{{ predio.propieta }}</td>
-							<td>{{ predio.e }}</td>
-							<td>{{ predio.d }}</td>
+							<td style="width: 30px">{{ predio.e }}</td>
+							<td style="width: 30px">{{ predio.d }}</td>
 							<td>{{ predio.id_propietario }}</td>
 							<td>{{ predio.dir_predio }}</td>
-							<td>{{ predio.hectarea }}</td>
-							<td>{{ predio.met2 }}</td>
+							<td style="width: 70px">{{ predio.hectarea }}</td>
+							<td style="width: 70px">{{ predio.met2 }}</td>
 							<td>{{ predio.area_con }}</td>
 							<td>$ {{ predio.avaluo_catastral|floatformat|intcomma }}</td>
 						</tr>
@@ -86,22 +93,18 @@
 							<td colspan="12"><h1>No hay datos</h1></td>
 						</tr>
 					{% endfor %}
-						{% if option %}
-						<tr>
-							<td colspan="12">
-								-----------------------------------------------------------------------------------------------------------------------------------------------
-							</td>
-						</tr>
-						<tr>
-							<th colspan="11">Total</th>
-							<th>$ {{ total.avaluo_catastral_sum|floatformat|intcomma }}</th>
-						</tr>
-						{% endif %}
+					<tr>
+						<td colspan="12">-------------------------------------------------------------------------------------------------------------------------------------------------------------------</td>
+					</tr>
+					<tr>
+						<th colspan="11">TOTAL</th>
+						<th colspan="1">$ {{ predios_val_sum.val_sum|floatformat|intcomma }}</th>
+					</tr>
 				</tbody>
 			</table>
 		</div>
 		<div id="footerContent">
-			HOJA NUMERO <pdf:pagenumber>
+			HOJA NÚMERO <pdf:pagenumber>
 		</div>
 	</body>
 </html>

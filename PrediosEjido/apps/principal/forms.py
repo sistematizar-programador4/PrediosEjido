@@ -80,8 +80,8 @@ class PropietaForm(forms.ModelForm):
 			'email': TextInput(attrs = {'type': 'email', 'class': 'form-control', 'maxlength': '50'}),
 		}
 		labels = {
-			'id_propieta': 'Identificación del propietario',
-			'name': 'Nombre Completo del propietario',
+			'id_propieta': 'Identificación del propietario (*)',
+			'name': 'Nombre Completo del propietario (*)',
 			'direction': 'Dirección del propietario',
 			'tel': 'Número telefónico del propietario',
 			'email': 'Correo Electrónico del propietario',

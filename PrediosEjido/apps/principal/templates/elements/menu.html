@@ -30,9 +30,9 @@
 				<li>
 					<a href="#"><i class="glyphicon glyphicon-list-alt fa-fw"></i> Informes<span class="fa arrow"></span></a>
 					<ul class="nav nav-second-level">
-						<li><a target="_blank" href="{% url 'pdf_all_predio' %}">Todos los predios</a></li>
-						<li><a target="_blank" href="{% url 'pdf_all_predio' 0 %}">Total avaluo catastral</a></li>
-						<li><a target="_blank" href="{% url 'pdf_all_predio' 1 %}">Total avaluo comercial</a></li>
+						<li><a target="_blank" href="{% url 'pdf_general_predio' %}">General</a></li>
+						<li><a target="_blank" href="{% url 'pdf_propieta_predio' %}">Propietarios</a></li>
+						<li><a target="_blank" href="{% url 'pdf_valor_predio' %}">Valores</a></li>
 					</ul>
 				</li>
 				<li><a href="{% url 'upload_data_predio' %}"><i class="glyphicon glyphicon-import fa-fw"></i> Importar</a></li>

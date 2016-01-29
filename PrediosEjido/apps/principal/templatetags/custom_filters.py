@@ -9,3 +9,7 @@ def sum_vrecaja(value):
 	if pago_total['v_recaja__sum'] is None:
 		pago_total['v_recaja__sum'] = 0
 	return pago_total['v_recaja__sum']
+
+@register.filter
+def sort_by(queryset, order):
+	return queryset.order_by(order)
